@@ -27,5 +27,6 @@
         "javascript": "javascriptreact"
     },
     "editor.linkedEditing": true,
-    "prettier.singleQuote": true
+    "prettier.singleQuote": true,
+    "editor.fontSize": 17
 }

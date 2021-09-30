@@ -26,7 +26,7 @@ const Join = () => {
                     />
                 </div>
                 <Link
-                    to={`/chat?${name}&${room}`}
+                    to={`/chat?name=${name}&room=${room}`}
                     onClick={(e) =>
                         !name || !room ? e.preventDefault() : null
                     }
