@@ -1,6 +1,9 @@
 import queryString from 'query-string';
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
+import InfoBar from '../InfoBar/InfoBar';
+import Input from '../Input/Input';
+import Messages from '../Messages/Messages';
 import './Chat.css';
 
 let socket;
@@ -15,20 +18,18 @@ const Chat = ({ location }) => {
 
     // getting the user name and room and emitting to server
     useEffect(() => {
-        const data = queryString.parse(location.search);
+        const { name, room } = queryString.parse(location.search);
 
         socket = io(ENDPOINT);
 
-        setName(data.name);
-        setRoom(data.room);
+        setName(name);
+        setRoom(room);
 
-        socket.emit('join', name, room, () => {});
-
-        return () => {
-            socket.disconnect();
-
-            socket.off();
-        };
+        socket.emit('join', { name, room }, (error) => {
+            if (error) {
+                alert(error);
+            }
+        });
     }, [ENDPOINT, location.search]);
 
     // listeting to message event from server
@@ -47,18 +48,15 @@ const Chat = ({ location }) => {
         }
     };
 
-    console.log(message, messages);
-
     return (
         <div className="outerContainer">
             <div className="container">
-                <input
-                    type="text"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    onKeyPress={(event) =>
-                        event.key === 'Enter' ? sendMessage(event) : null
-                    }
+                <InfoBar room={room} />
+                <Messages messages={messages} name={name} />
+                <Input
+                    message={message}
+                    setMessage={setMessage}
+                    sendMessage={sendMessage}
                 />
             </div>
         </div>
